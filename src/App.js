@@ -10,8 +10,16 @@ export default class App extends React.Component {
   handleKeyDown = (e) => {
     this.playSound(e.key.toUpperCase());
   }
+
+  removeTransition(e) {
+    if (e.propertyName !== 'transform') {
+      e.target.classList.remove('playing');
+    }
+  }
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyDown);
+    const pads = Array.from(document.querySelectorAll(".drum-pad"));
+    pads.forEach(pad => pad.addEventListener('transitionend', this.removeTransition));
   }
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleKeyDown);
@@ -23,6 +31,7 @@ export default class App extends React.Component {
     }
     const display = document.getElementById('display');
     display.innerHTML = audio.parentElement.id;
+    audio.parentElement.classList.add('playing');
     audio.currentTime = 0;
     audio.play();
   }
